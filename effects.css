@@ -31,13 +31,13 @@
 .wipe.out i:nth-child(1) { transition-delay: .12s; }
 
 /* --- 3. 流れる文字の帯 --- */
-.marquee { overflow-x: auto; overflow-y: hidden; scrollbar-width: none; overscroll-behavior-x: contain; cursor: grab; background: var(--red); color: #fff; padding: 12px 0; transform: rotate(-1.6deg); margin: 8px -10px -18px; position: relative; z-index: 3; }
+.marquee { overflow-x: auto; overflow-y: hidden; scrollbar-width: none; overscroll-behavior-x: contain; cursor: grab; background: var(--red); color: #fff; padding: 6px 0; transform: rotate(-1.6deg); margin: 8px -10px -18px; position: relative; z-index: 3; }
 .marquee::-webkit-scrollbar { display: none; }
 .marquee.dragging { cursor: grabbing; }
 .marquee-track { display: flex; width: max-content; }
 /* 流れる帯の作品：作品の色のタイルに、作品の切り抜き。押すとその作品が開く */
-.mq-item { display: grid; place-items: center; width: 144px; height: 84px; margin-right: 14px; flex: none; border-radius: 18px;
-  background: var(--theme); border: 4px solid var(--theme); overflow: hidden; transition: transform .25s; }
+.mq-item { display: grid; place-items: center; width: 148px; aspect-ratio: 4 / 3; height: auto; margin-right: 10px; flex: none; border-radius: 16px;
+  background: var(--theme); border: 5px solid var(--theme); overflow: hidden; transition: transform .25s; }
 .mq-item:hover { transform: translateY(-4px) rotate(-3deg); }
 .mq-cut { width: 86%; height: 86%; object-fit: contain; filter: drop-shadow(0 3px 4px rgba(0, 0, 0, .25)); }
 .mq-photo { width: 100%; height: 100%; object-fit: cover; }
@@ -119,7 +119,7 @@ button.float.pop .float-in { transform: scale(1.8); transition: transform .45s c
 
 @media (max-width: 700px) {
   .peek { width: 96px; }
-  .mq-item { width: 108px; height: 64px; margin-right: 10px; border-radius: 14px; }
+  .mq-item { width: 104px; margin-right: 8px; border-radius: 12px; border-width: 4px; }
 }
 
 /* 帯で切り替えたあとの最初の画面は、動かさずにそのまま出す */
