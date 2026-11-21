@@ -1,0 +1,30 @@
+<svg viewBox="0 0 640 300" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="大中小の3種類の木箱。中が貫通しているので、積めば棚に、段差をつければ陳列台になり、地域や商品数に合わせて組み替えられる">
+  <style>
+    .t{font:700 18px 'Zen Kaku Gothic New',sans-serif;fill:#2C6B34}
+    .s{font:500 14px 'Zen Kaku Gothic New',sans-serif;fill:#2C6B34}
+    .en{font:600 12px 'Outfit',sans-serif;letter-spacing:.15em;fill:#44974F}
+  </style>
+  <defs>
+    <g id="b"><rect width="1" height="1" fill="#E8D3B4" stroke="#8E6A48" stroke-width=".035"/><rect x=".16" y=".16" width=".68" height=".68" fill="#fff" stroke="#8E6A48" stroke-width=".03"/></g>
+  </defs>
+  <!-- 3種類 -->
+  <text class="en" x="20" y="24">MODULE</text><text class="t" x="20" y="44">大・中・小の木箱（中は貫通）</text>
+  <use href="#b" transform="translate(24,110) scale(110)"/>
+  <use href="#b" transform="translate(152,140) scale(80)"/>
+  <use href="#b" transform="translate(250,170) scale(50)"/>
+  <text class="s" x="79" y="244" text-anchor="middle">大</text><text class="s" x="192" y="244" text-anchor="middle">中</text><text class="s" x="275" y="244" text-anchor="middle">小</text>
+  <line x1="20" y1="220" x2="310" y2="220" stroke="#8E6A48" stroke-width="2"/>
+  <!-- 組み替え例 -->
+  <text class="en" x="350" y="24">EXAMPLES</text><text class="t" x="350" y="44">組み替えの例</text>
+  <!-- 積んで棚に -->
+  <use href="#b" transform="translate(360,140) scale(80)"/>
+  <use href="#b" transform="translate(360,60) scale(80)"/>
+  <use href="#b" transform="translate(440,170) scale(50)"/>
+  <text class="s" x="420" y="244" text-anchor="middle">積んで棚に</text>
+  <!-- 段差で陳列台に -->
+  <use href="#b" transform="translate(500,170) scale(50)"/>
+  <use href="#b" transform="translate(550,140) scale(80)" />
+  <text class="s" x="565" y="244" text-anchor="middle">段差をつけて台に</text>
+  <line x1="350" y1="220" x2="630" y2="220" stroke="#8E6A48" stroke-width="2"/>
+  <text class="s" x="320" y="284" text-anchor="middle">地域ごとに商品の数や並べ方が変わっても、同じ箱の組み合わせで対応できる</text>
+</svg>

@@ -1,0 +1,297 @@
+/* 色や文字の設定（ここを変えると全体が変わります） */
+:root {
+  --cream: #F6EAD2;
+  --paper: #FFFBF3;
+  --orange: #E6A443;
+  --red: #D9622B;
+  --blue: #2E6DBE;
+  --sky-top: #1E68B3;
+  --sky-bottom: #62BDEA;
+  --ink: #2B2420;
+  --sub: #6E6258;
+  --line: #E4D5B8;
+  --accent: var(--orange);
+  --jp: "Zen Kaku Gothic New", "Hiragino Sans", sans-serif;
+  --en: "Outfit", "Zen Kaku Gothic New", sans-serif;
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body { margin: 0; background: var(--cream); color: var(--ink); font-family: var(--jp); font-weight: 400; line-height: 1.95; letter-spacing: .04em; }
+body.lock { overflow: hidden; }
+html, body { overflow-x: clip; }
+/* 写真の元の大きさで枠がはみ出さないように */
+.row > *, .figs > * { min-width: 0; }
+img { max-width: 100%; height: auto; display: block; }
+a { color: inherit; }
+button { font: inherit; color: inherit; }
+
+/* ナビ */
+.nav { position: fixed; top: 0; left: 0; right: 0; z-index: 20; display: flex; justify-content: space-between; align-items: center;
+  padding: 14px clamp(16px, 3vw, 40px); color: var(--ink); pointer-events: none; }
+.nav a { pointer-events: auto; text-decoration: none; }
+.nav-name { font-weight: 500; font-size: 17px; line-height: 1.3; color: #fff; text-shadow: 0 1px 2px rgba(0, 0, 0, .45), 0 0 10px rgba(0, 0, 0, .25); }
+.nav-name:hover { color: var(--orange); }
+.nav-name small { display: block; font-family: var(--en); font-weight: 300; font-size: 11px; letter-spacing: .2em; }
+.nav nav { display: flex; gap: 8px; }
+.nav nav a { font-family: var(--en); font-weight: 400; font-size: 13px; letter-spacing: .16em; padding: 6px 14px; border-radius: 999px;
+  background: rgba(255, 255, 255, .92); color: var(--ink); }
+.nav nav a:hover { background: var(--orange); color: #fff; }
+
+/* ========== トップ（表紙が動き出す） ========== */
+.stage-wrap { padding: 96px 16px 24px; }
+/* 表紙のページ（1207×859）と同じ比率。画面に収まる大きさにする */
+.stage { position: relative; margin: 0 auto; width: min(94vw, calc((100svh - 150px) * 1.406)); aspect-ratio: 1207.56 / 858.9;
+  container-type: size; --mx: 0; --my: 0; }
+
+.frame { position: absolute; left: 5.38%; top: 11.41%; width: 89.10%; height: 81.03%; overflow: hidden; border-radius: 1.6cqw;
+  clip-path: inset(0 round 1.6cqw);
+  opacity: 0; transform: scale(.94); transition: opacity .6s, transform 1s cubic-bezier(.2, .8, .2, 1); }
+.ready .frame { opacity: 1; transform: none; }
+.frame img { position: absolute; max-width: none; }
+.bg { inset: 0; width: 100%; height: 100%; }
+.ready .bg { animation: bg-in 1.4s cubic-bezier(.2, .8, .2, 1) both; }
+@keyframes bg-in { from { transform: scale(1.08); } }
+
+/* 真ん中の人：枠から飛び出す */
+.human { position: absolute; left: 0; top: 0; width: 100%; height: 100%; max-width: none; pointer-events: none; z-index: 1;
+  opacity: 0; transform: scale(.7) rotate(-12deg); transform-origin: 15% 25%;
+  transition: opacity .5s .8s, transform 1.3s .8s cubic-bezier(.34, 1.45, .64, 1); }
+.ready .human { opacity: 1; transform: translate(calc(var(--mx) * -12px), calc(var(--my) * -8px)); animation: drift 9s 2.2s ease-in-out infinite; }
+@keyframes drift { 50% { translate: 0 -1.2%; rotate: .6deg; } }
+
+/* 作品：表紙の位置から飛び出して、ふわふわ浮かぶ */
+.float { position: absolute; z-index: 2; padding: 0; border: 0; background: none; cursor: pointer; translate: -50% -50%;
+  transform: translate(var(--fx), var(--fy)) scale(0); opacity: 0;
+  transition: transform 1.1s calc(1.1s + var(--i) * .06s) cubic-bezier(.34, 1.56, .64, 1), opacity .4s calc(1.1s + var(--i) * .06s); }
+.float.deco { cursor: default; }
+.ready .float { transform: none; opacity: 1; }
+.float-in { display: block; transition: transform .35s cubic-bezier(.34, 1.56, .64, 1);
+  transform: translate(calc(var(--mx) * var(--depth) * -36px), calc(var(--my) * var(--depth) * -26px)) scale(var(--s, 1)); }
+.float img { width: 100%; rotate: var(--rot);
+  animation: bob var(--dur) ease-in-out infinite alternate; animation-delay: calc(var(--i) * -.7s); }
+@keyframes bob { from { translate: 0 -5%; } to { translate: 0 5%; } }
+button.float:hover, button.float:focus-visible { z-index: 5; --s: 1.18; outline: none; }
+.label { position: absolute; left: 50%; top: 100%; transform: translate(-50%, 4px); white-space: nowrap; pointer-events: none;
+  background: #fff; color: var(--ink); border-radius: 999px; padding: 2px 12px; font-size: 13px; font-weight: 500;
+  opacity: 0; transition: opacity .2s, transform .2s; }
+.label b { font-family: var(--en); font-weight: 600; color: var(--red); margin-right: 6px; }
+.float:hover .label, .float:focus-visible .label { opacity: 1; transform: translate(-50%, 10px); }
+
+.hint { margin: 8px 0 0; text-align: center; color: var(--sub); font-size: 13px; }
+
+/* ========== 作品一覧 ========== */
+.sec-title { display: flex; flex-direction: column; font-size: 18px; font-weight: 500; margin: 0 0 40px; }
+.sec-title span { font-family: var(--en); font-weight: 300; font-size: clamp(44px, 7vw, 80px); line-height: 1; letter-spacing: .04em; color: var(--red); }
+.works { position: relative; overflow: hidden; padding: 96px max(clamp(16px, 4vw, 48px), calc((100% - 1280px) / 2)) 48px; color: #fff;
+  background: linear-gradient(170deg, transparent 62%, rgba(217, 98, 43, .9) 62% 66%, transparent 66%),
+              linear-gradient(180deg, var(--sky-top), var(--sky-bottom)); }
+.works .sec-title span, .works .group-head h3 span { color: #fff; }
+.works .group-head { border-top-color: rgba(255, 255, 255, .4); }
+.works .group-head p, .works .card-t small { color: rgba(255, 255, 255, .85); }
+.group { margin-bottom: 64px; }
+.group-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 32px; border-top: 1px solid var(--line); padding-top: 20px; margin-bottom: 20px; }
+.group-head h3 { margin: 0; font-size: 20px; font-weight: 500; display: flex; flex-direction: column; line-height: 1.4; }
+.group-head h3 span { font-family: var(--en); font-weight: 400; font-size: 12px; letter-spacing: .2em; color: var(--red); }
+.group-head p { margin: 0; color: var(--sub); font-size: 14px; max-width: 36em; }
+.cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 28px 20px; }
+.card { display: block; text-decoration: none; }
+.card-img { display: block; border: 7px solid var(--theme); border-radius: 20px; overflow: hidden; aspect-ratio: 4 / 3; background: var(--theme); }
+.card-img img { width: 100%; height: 100%; object-fit: cover; transition: transform .5s; }
+.card:hover .card-img img { transform: scale(1.05); }
+.card-t { display: block; margin-top: 10px; font-size: 16px; font-weight: 500; line-height: 1.5; }
+.card-t b { font-family: var(--en); font-weight: 600; display: inline-block; background: var(--theme); color: var(--on) !important; border-radius: 6px; padding: 0 7px; margin-right: 8px; }
+.card-t small { display: block; font-size: 12px; color: var(--sub); font-weight: 400; }
+
+/* ========== 作品の詳細（作品ごとのテーマカラーで） ========== */
+.detail { position: fixed; inset: 0; z-index: 30; overflow-y: auto; overflow-x: hidden; background: #fff;
+  transform: translateY(100%); transition: transform .45s cubic-bezier(.2, .8, .2, 1); }
+.detail.open { transform: none; }
+.detail[hidden] { display: none; }
+.detail-close { position: fixed; top: 14px; right: clamp(14px, 3vw, 36px); z-index: 2; width: 48px; height: 48px; border-radius: 50%; border: 0;
+  background: #fff; color: var(--ink); font-size: 26px; line-height: 1; cursor: pointer; }
+.detail-close:hover { background: var(--ink); color: #fff; }
+
+.work > * { margin-left: auto; margin-right: auto; }
+
+/* 上：テーマカラーの帯 */
+.work-hero { color: var(--on); padding: 52px clamp(16px, 4vw, 48px) 130px; background: var(--theme); position: relative; overflow: hidden; }
+.work-hero::before, .work-hero::after { content: ""; position: absolute; left: -10%; right: -10%; height: 46px; background: rgba(255, 255, 255, .22); transform: rotate(-6deg); }
+.work-hero::before { bottom: 60px; }
+.work-hero::after { bottom: 16px; height: 14px; }
+.work-hero-in { max-width: 1120px; margin: 0 auto; position: relative; z-index: 1; }
+.work-cat { margin: 0; font-family: var(--en); font-size: 12px; letter-spacing: .2em; }
+.work-head { display: flex; align-items: center; gap: clamp(12px, 2vw, 24px); margin: 2px 0 14px; }
+.work-head .no { font-family: var(--en); font-weight: 600; font-size: clamp(72px, 11vw, 136px); line-height: .9; }
+.work-head p { margin: 0; font-size: clamp(13px, 1.5vw, 16px); font-weight: 500; }
+.work-head h2 { margin: 0; font-size: clamp(30px, 4.6vw, 52px); line-height: 1.25; font-weight: 700; letter-spacing: .06em; }
+.tags { list-style: none; display: flex; flex-wrap: wrap; gap: 8px; margin: 0; padding: 0; }
+.tags li { border: 2px solid currentColor; border-radius: 999px; padding: 0 14px; font-size: 13px; font-weight: 500; }
+
+/* 写真：太いテーマカラーの枠（影なし） */
+.work-cover { max-width: 1120px; margin-top: -100px; position: relative; z-index: 1; cursor: zoom-in;
+  border: clamp(8px, 1.2vw, 14px) solid var(--theme); border-radius: clamp(20px, 2.6vw, 34px); overflow: hidden; background: var(--theme); }
+/* 写真は切り取らず全体を見せる。縦長の写真は枠ごと細くなる */
+.work-cover { width: fit-content; }
+.work-cover img { display: block; width: auto; max-width: 100%; max-height: 80vh; }
+
+.meta { max-width: 1120px; display: flex; flex-wrap: wrap; gap: 10px; margin: 24px auto 0; padding: 0 clamp(16px, 4vw, 0px); }
+.meta div { display: flex; align-items: stretch; border: 2px solid var(--theme); border-radius: 999px; overflow: hidden; }
+.meta dt { background: var(--theme); color: var(--on); font-size: 13px; font-weight: 700; padding: 6px 14px; display: flex; align-items: center; }
+.meta dd { margin: 0; padding: 6px 16px; font-size: 14px; display: flex; align-items: center; }
+
+/* 文章と写真を左右交互に。写真の横からテーマカラーの帯が画面の端まで伸びる */
+.rows { max-width: 1120px; padding: 8px clamp(16px, 4vw, 0px) 0; }
+.row { display: grid; grid-template-columns: 1fr 1.15fr; gap: clamp(24px, 4vw, 56px); align-items: center; padding: 36px 0; }
+.row.flip .row-text { order: 2; }
+.row.solo { grid-template-columns: 1fr; padding: 20px 0; }
+.row.solo .row-text { max-width: 46em; }
+.row-no { display: block; font-family: var(--en); font-weight: 600; font-size: 44px; line-height: 1; color: var(--theme-text); }
+.row-text h3 { margin: 6px 0 10px; font-size: 23px; font-weight: 700; line-height: 1.4; color: var(--theme-text); }
+.row-text p { margin: 0; font-size: 15.5px; }
+.figs { position: relative; display: flex; flex-direction: column; gap: 16px; }
+/* 帯：写真の行ごとに、写真の後ろを途切れずに通す */
+/* 写真1枚の行：帯の内側の端は写真の真ん中（写真の後ろ）。文章側には出さない */
+.frow::before { content: ""; position: absolute; z-index: -1; top: 50%; height: 34%; translate: 0 -50%; left: 50%; right: -100vw; background: var(--theme); }
+.row.flip .frow::before { left: -100vw; right: 50%; }
+.row.wide .frow::before { left: -100vw; right: -100vw; height: 30%; }
+/* 各作品の最初の帯（スタート地点）は左へはみ出さない */
+.row.wide .frow.first::before { left: var(--bl, 0px); }
+.row.n2 { grid-template-columns: .8fr 1.4fr; }
+/* 同じ行の写真は高さをそろえる（--ar は写真の横÷縦、18px は枠の太さ×2） */
+.frow { display: flex; gap: 16px; align-items: center; position: relative; z-index: 1; isolation: isolate; --fb: 18px; }
+.frow figure { flex: var(--ar) 1 var(--fb); min-width: 0; margin: 0; cursor: zoom-in; }
+.frow figure.comp { flex-basis: 0; }
+.frow figure img { display: block; width: 100%; height: auto;
+  border: 9px solid var(--theme); border-radius: 22px; background: var(--theme); }
+/* 1枚だけの写真は、縦長でも大きくなりすぎないように */
+.frow figure:only-child { flex: 0 1 auto; margin: 0 auto; }
+.frow figure:only-child img { width: auto; max-width: 100%; max-height: 600px; }
+
+/* 写真が多い文章・大きく見せたい文章：文章の下に横幅いっぱいで */
+.row.wide { grid-template-columns: 1fr; gap: 20px; }
+.row.wide .row-text { max-width: 46em; }
+.row.wide .frow figure:only-child { flex: 1 1 auto; }
+.row.wide .frow figure:only-child img { width: 100%; max-height: none; }
+
+
+.pager { display: grid; grid-template-columns: 1fr 1fr; background: var(--theme); color: var(--on); }
+.pager a { text-decoration: none; padding: 28px clamp(16px, 4vw, 48px); font-size: 17px; font-weight: 700; line-height: 1.5; }
+.pager a + a { text-align: right; border-left: 2px solid rgba(255, 255, 255, .35); }
+.pager a:hover { background: rgba(255, 255, 255, .15); }
+.pager small { display: block; font-family: var(--en); font-size: 11px; letter-spacing: .2em; font-weight: 400; }
+
+/* ========== プロフィール ========== */
+.about { padding: 96px max(clamp(16px, 4vw, 48px), calc((100% - 1280px) / 2)) 96px;
+  background: linear-gradient(168deg, transparent 70%, rgba(230, 164, 67, .35) 70%), #F8E2BC; }
+.about-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 40px; align-items: start; }
+.about-grid img { border-radius: 24px; }
+.about-grid p { margin: 0 0 1em; font-size: 15px; }
+.about-name { font-size: 26px !important; font-weight: 500; line-height: 1.4; }
+.about-name small { display: block; font-size: 13px; color: var(--sub); font-weight: 400; }
+.timeline { list-style: none; padding: 0; margin: 56px 0 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 12px; }
+.timeline li { background: var(--paper); border-radius: 18px; padding: 20px; display: flex; flex-direction: column; gap: 10px; font-size: 14px; line-height: 1.7; }
+.timeline b { width: 42px; height: 42px; border-radius: 50%; background: var(--orange); color: #fff; display: grid; place-items: center; font-size: 18px; font-weight: 500; }
+.timeline li:nth-child(even) b { background: var(--red); }
+.timeline li:nth-child(3) b { background: var(--blue); }
+
+.foot { display: flex; justify-content: space-between; padding: 24px clamp(16px, 4vw, 48px); background: var(--ink); color: var(--cream); font-size: 13px; }
+.foot p { margin: 0; }
+.foot a { text-decoration: none; font-family: var(--en); }
+
+/* 拡大表示 */
+.lightbox { position: fixed; inset: 0; z-index: 50; background: rgba(20, 15, 10, .92); display: flex; align-items: center; justify-content: center; padding: 48px 56px; }
+.lightbox[hidden] { display: none; }
+.lightbox figure { margin: 0; max-width: 100%; max-height: 100%; display: flex; flex-direction: column; align-items: center; }
+.lightbox img { max-height: calc(100vh - 140px); width: auto; border-radius: 8px; }
+.lightbox figcaption { color: var(--cream); margin-top: 12px; }
+.lightbox button { position: absolute; background: none; border: 0; color: #fff; font-size: 44px; cursor: pointer; padding: 8px 14px; line-height: 1; font-family: var(--en); }
+.lb-close { top: 8px; right: 12px; }
+.lb-prev { left: 4px; top: 50%; transform: translateY(-50%); }
+.lb-next { right: 4px; top: 50%; transform: translateY(-50%); }
+
+/* スマホ */
+@media (max-width: 700px) {
+  .lightbox { padding: 48px 8px; }
+  .lb-prev, .lb-next { top: auto; bottom: 8px; transform: none; }
+}
+
+/* 動きを減らす設定の人には、動きを止める */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+}
+
+/* ========== スマホ（幅700px以下）用のレイアウト ========== */
+.m-word { display: none; }
+@media (max-width: 700px) {
+  /* 表紙：縦長の青空いっぱいに */
+  .stage-wrap { padding: 0; }
+  .stage { width: 100%; aspect-ratio: 9 / 17; max-height: none; min-height: 0; }
+  .frame { left: 0; top: 0; width: 100%; height: 100%; border-radius: 0; clip-path: none;
+    background: linear-gradient(180deg, var(--sky-top), var(--sky-bottom)); }
+  .frame .bg { display: none; }
+  .frame::before, .frame::after { content: ""; position: absolute; left: 0; background: var(--red); }
+  .frame::before { top: 34%; width: 100%; height: 16%; clip-path: polygon(0 0, 100% 45%, 100% 100%, 0 60%); }
+  .frame::after { top: 66%; width: 100%; height: 34%; clip-path: polygon(0 0, 100% 40%, 100% 100%, 0 100%); }
+  .m-word { display: block; position: absolute; left: 2%; top: 40%; width: 96%; max-width: none; transform: rotate(-20deg); }
+  .human { left: -6%; top: 6%; width: 122%; height: auto; }
+  .hint { padding: 10px 16px 0; font-size: 12px; }
+  .hint-sep { display: block; height: 0; overflow: hidden; }
+  .label { font-size: 12px; }
+  .nav { padding: 10px 14px; }
+  .nav nav { gap: 6px; }
+  .nav nav a { padding: 3px 9px; font-size: 11px; letter-spacing: .1em; }
+
+  /* 作品一覧：2列 */
+  .works { padding-top: 64px; }
+  .cards { grid-template-columns: repeat(2, 1fr); gap: 18px 12px; }
+  .card-img { border-width: 5px; border-radius: 14px; }
+  .card-t { font-size: 14px; }
+  .group-head p { font-size: 13px; }
+
+  /* 作品ページ：文章と写真を縦に */
+  .work-hero { padding: 64px 16px 100px; }
+  .work-cover { margin-top: -76px; margin-left: 12px; margin-right: 12px; max-width: calc(100% - 24px); border-width: 6px; border-radius: 18px; }
+  .work-cover img { max-height: 70vh; }
+  .meta { padding: 0 12px; }
+  .meta div { border-radius: 14px; flex-direction: column; width: 100%; }
+  .meta dt { padding: 4px 12px; }
+  .meta dd { padding: 8px 12px; }
+  .row, .row.n2 { grid-template-columns: minmax(0, 1fr); gap: 16px; padding: 28px 0; }
+  .row.flip .row-text { order: 0; }
+  .figs, .frow { gap: 10px; }
+  .frow { --fb: 12px; }
+  .frow figure img { border-width: 6px; border-radius: 16px; }
+  .frow figure:only-child img { max-height: 70vh; }
+  .row-text h3 { font-size: 20px; }
+  .row-text p { font-size: 15px; }
+  .frow::before { height: 26%; }
+  .pager a { padding: 20px 16px; font-size: 14px; }
+
+  /* プロフィール */
+  .about { padding-top: 64px; }
+  .timeline { grid-template-columns: 1fr 1fr; }
+}
+
+/* 切り抜き写真は、枠の中を白にする（ベージュは使わない） */
+img.cut { background: #fff !important; }
+.card-img:has(img.cut), .work-cover:has(img.cut) { background: #fff; }
+.lightbox img.cut, #lb-img { background: transparent; }
+
+/* PDFと同じ「枠からはみ出す切り抜き」：画像そのものに枠が入っているので、こちらの枠はつけない */
+.frow figure img.comp { border: 0; border-radius: 0; background: none; }
+.frow figure:only-child img.comp { max-height: 640px; }
+
+/* ガムテープ造形（15）：横並びのまま、写真の側を広くして大きく見せる */
+@media (min-width: 701px) {
+  .work[data-no="15"] .row.n1 { grid-template-columns: .7fr 1.6fr; }
+  /* 左右が入れ替わる行（インコ）は、写真が左の列に入るので逆に */
+  .work[data-no="15"] .row.flip.n1 { grid-template-columns: 1.6fr .7fr; }
+  .work[data-no="15"] .frow figure:only-child img.comp { max-height: 780px; }
+}
+
+/* 図（配置の比較など）：写真の段のすぐ下に、1段まるごと使って大きく */
+.diagram-row { margin: -24px 0 72px; display: flex; justify-content: center; }
+.diagram { margin: 0; width: min(100%, 760px); padding: 20px 24px; background: #fff; border-radius: 22px;
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--theme) 45%, transparent); }
+.diagram img { display: block; width: 100%; height: auto; }
+@media (max-width: 700px) { .diagram-row { margin: -8px 0 48px; } .diagram { padding: 14px 10px; border-radius: 16px; width: min(100%, 360px); } }

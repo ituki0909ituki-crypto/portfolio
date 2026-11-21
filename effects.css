@@ -1,0 +1,120 @@
+/* ===== エフェクト（動き）の見た目。いらない動きはここで消せます ===== */
+
+/* --- 1. ローディング画面 --- */
+.loader { position: fixed; inset: 0; z-index: 90; display: flex; flex-direction: column; align-items: center; justify-content: center;
+  background: var(--orange); color: #fff; transition: clip-path .9s cubic-bezier(.7, 0, .2, 1); clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+  animation: loader-safety 0s 4s forwards; /* 万一動きのファイルが読めなくても、4秒で消える */ }
+@keyframes loader-safety { to { visibility: hidden; } }
+.loader.out { clip-path: polygon(0 0, 100% 0, 100% 0, 0 0); }
+.loader-word { position: relative; width: min(82vw, 900px); aspect-ratio: 1466 / 711; }
+.loader-word img { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; transform: translateY(18%) scale(.7);
+  animation: pop-in .7s cubic-bezier(.34, 1.7, .64, 1) forwards; }
+.loader-word img:nth-child(1) { animation-delay: .1s; }
+.loader-word img:nth-child(2) { animation-delay: .25s; }
+.loader-word img:nth-child(3) { animation-delay: .38s; }
+.loader-word img:nth-child(4) { animation-delay: .5s; }
+@keyframes pop-in { to { transform: none; opacity: 1; } }
+.loader-sub { margin: 18px 0 0; font-family: var(--en); letter-spacing: .4em; font-size: 13px; opacity: 0; animation: fade .6s .8s forwards; }
+@keyframes fade { to { opacity: 1; } }
+
+/* --- 2. 詳細を開くときに横切る帯 --- */
+.wipe { position: fixed; inset: 0; z-index: 60; pointer-events: none; overflow: hidden; }
+.wipe i { position: absolute; top: -20%; bottom: -20%; left: -20%; right: -20%; transform: translateX(-140%) skewX(-18deg); }
+.wipe i:nth-child(1) { background: var(--blue); }
+.wipe i:nth-child(2) { background: var(--orange); }
+.wipe i:nth-child(3) { background: var(--c, var(--red)); }
+.wipe.in i { transform: translateX(0) skewX(-18deg); transition: transform .42s cubic-bezier(.7, 0, .3, 1); }
+.wipe.in i:nth-child(2) { transition-delay: .07s; }
+.wipe.in i:nth-child(3) { transition-delay: .14s; }
+.wipe.out i { transform: translateX(140%) skewX(-18deg); transition: transform .5s cubic-bezier(.7, 0, .3, 1); }
+.wipe.out i:nth-child(2) { transition-delay: .06s; }
+.wipe.out i:nth-child(1) { transition-delay: .12s; }
+
+/* --- 3. 流れる文字の帯 --- */
+.marquee { overflow: hidden; background: var(--red); color: #fff; padding: 14px 0; transform: rotate(-1.6deg); margin: 8px -10px -18px; position: relative; z-index: 3; }
+.marquee-track { display: flex; width: max-content; animation: marquee 28s linear infinite; }
+.marquee span { font-family: var(--en); font-weight: 400; font-size: clamp(20px, 2.6vw, 34px); letter-spacing: .12em; white-space: nowrap; padding-right: .5em; }
+@keyframes marquee { to { transform: translateX(-50%); } }
+
+/* --- 4. 表紙：スクロールで作品が飛び去る・ドラッグで動かせる --- */
+.stage { --sy: 0; }
+.float-in { transform:
+  translate(calc(var(--mx) * var(--depth) * -36px), calc(var(--my) * var(--depth) * -26px + var(--sy) * var(--depth) * -0.45px))
+  rotate(calc(var(--sy) * var(--depth) * .03deg)) scale(var(--s, 1)); }
+.human { translate: 0 calc(var(--sy) * -0.12px); }
+.ready .float.settled { transition: none; transform: translate(var(--dx, 0px), var(--dy, 0px)); }
+button.float.settled { cursor: grab; }
+button.float.dragging { cursor: grabbing; z-index: 8; --s: 1.25; }
+button.float.pop { z-index: 9; }
+button.float.pop .float-in { transform: scale(1.8); transition: transform .45s cubic-bezier(.5, 0, .3, 1.4); }
+
+/* --- 5. スクロールで登場 --- */
+[data-reveal] { opacity: 0; transform: translateY(40px); transition: opacity .8s, transform .9s cubic-bezier(.2, .8, .2, 1); transition-delay: var(--d, 0s); }
+[data-reveal].shown { opacity: 1; transform: none; }
+/* 一番上の写真は、左から右へサッと開くように */
+[data-reveal="wipe"] { opacity: 1; transform: none; }
+[data-reveal="wipe"] > img { clip-path: inset(0 100% 0 0);
+  transition: clip-path 1s cubic-bezier(.7, 0, .2, 1), transform .15s ease-out; transition-delay: var(--d, 0s), 0s; }
+[data-reveal="wipe"].shown > img { clip-path: inset(0 0 0 0); }
+/* 写真の行：帯が先に伸び、帯が届いたところで写真が順番に出る（届くタイミングは effects.js で計算） */
+[data-reveal="band"] { opacity: 1; transform: none; }
+[data-reveal="band"]::before { transform: scaleX(0); transform-origin: 0 50%;
+  transition: transform var(--dur, .7s) cubic-bezier(.6, 0, .3, 1); }
+[data-reveal="band"].shown::before { transform: scaleX(1); }
+[data-reveal="band"] figure { opacity: 0; transform: scale(.85);
+  transition: opacity .35s, transform .55s cubic-bezier(.34, 1.6, .64, 1); }
+[data-reveal="band"].shown figure { opacity: 1; transform: none; }
+/* 各作品の最初の段だけ：先に写真が出て、そのあと写真から右へ帯が伸びる */
+[data-reveal="band"].first figure { transition-delay: 0s !important; }
+[data-reveal="band"].first::before { transition-delay: .4s; }
+
+/* 見出しの文字が一文字ずつ */
+.chars span { display: inline-block; opacity: 0; transform: translateY(.6em) rotate(8deg); transition: opacity .5s, transform .6s cubic-bezier(.34, 1.6, .64, 1); }
+.chars.shown span { opacity: 1; transform: none; }
+
+/* --- 6. マウス：ついてくる丸・写真が傾く --- */
+.cursor { position: fixed; left: 0; top: 0; z-index: 100; width: 10px; height: 10px; margin: -5px 0 0 -5px; border-radius: 50%;
+  background: var(--orange); pointer-events: none; transition: width .2s, height .2s, margin .2s, background .2s, border .2s; }
+.cursor.big { width: 30px; height: 30px; margin: -15px 0 0 -15px; background: transparent; border: 2px solid var(--orange); }
+.cursor.hide { opacity: 0; }
+.tilt { transition: transform .15s ease-out; transform-style: preserve-3d; will-change: transform; }
+@media (hover: none) { .cursor { display: none; } }
+
+@media (prefers-reduced-motion: reduce) {
+  .loader, .cursor, .wipe { display: none !important; }
+  [data-reveal], .chars span, [data-reveal] figure { opacity: 1 !important; transform: none !important; clip-path: none !important; }
+  [data-reveal="band"]::before { transform: none !important; }
+}
+
+/* --- 7. 作品一覧の端から、表紙の作品がひょこっと顔を出す --- */
+.peek { position: absolute; z-index: 2; width: clamp(130px, 13vw, 200px); padding: 0; border: 0; background: none; cursor: pointer;
+  animation: peek-l var(--t, 8s) var(--delay, 0s) ease-in-out infinite; }
+.peek img { width: 100%; display: block; rotate: var(--r, 0deg); }
+.peek.l { left: 0; transform: translateX(-105%); }
+.peek.r { right: 0; transform: translateX(105%); animation-name: peek-r; }
+.peek:hover { animation-play-state: paused; }
+@keyframes peek-l {
+  0%, 55%, 100% { transform: translateX(-105%) rotate(0); }
+  64% { transform: translateX(-22%) rotate(14deg); }
+  68% { transform: translateX(-27%) rotate(4deg); }
+  72% { transform: translateX(-22%) rotate(10deg); }
+  76% { transform: translateX(-24%) rotate(6deg); }
+  86% { transform: translateX(-105%) rotate(0); }
+}
+@keyframes peek-r {
+  0%, 55%, 100% { transform: translateX(105%) rotate(0); }
+  64% { transform: translateX(22%) rotate(-14deg); }
+  68% { transform: translateX(27%) rotate(-4deg); }
+  72% { transform: translateX(22%) rotate(-10deg); }
+  76% { transform: translateX(24%) rotate(-6deg); }
+  86% { transform: translateX(105%) rotate(0); }
+}
+
+@media (max-width: 700px) {
+  .peek { width: 96px; }
+  .marquee span { font-size: 18px; }
+}
+
+/* 帯で切り替えたあとの最初の画面は、動かさずにそのまま出す */
+.instant, .instant::before, .instant figure, .instant > img { transition: none !important; }
+.detail.instant { transition: none !important; }

@@ -1,0 +1,31 @@
+<svg viewBox="0 0 320 730" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="テントの配置の比較。これまでは縦一列でステージまで見通せたが、ジグザグにすると通路が狭く斜めになり、出店に立ち寄りやすくなる">
+  <style>
+    .t{font:700 18px 'Zen Kaku Gothic New',sans-serif;fill:#7A2D55}
+    .s{font:500 14px 'Zen Kaku Gothic New',sans-serif;fill:#7A2D55}
+    .en{font:600 12px 'Outfit',sans-serif;letter-spacing:.15em;fill:#C46A97}
+  </style>
+  <!-- BEFORE -->
+  <g transform="translate(20,0)">
+    <text class="en" x="0" y="22">BEFORE</text><text class="t" x="0" y="42">これまで：縦にまっすぐ</text>
+    <rect x="70" y="58" width="140" height="26" rx="6" fill="#C46A97"/><text class="s" x="140" y="75" text-anchor="middle" fill="#fff" style="fill:#fff">メインステージ</text>
+    <g fill="#fff" stroke="#C46A97" stroke-width="2">
+      <rect x="40" y="102" width="44" height="34" rx="4"/><rect x="40" y="146" width="44" height="34" rx="4"/><rect x="40" y="190" width="44" height="34" rx="4"/><rect x="40" y="234" width="44" height="34" rx="4"/><rect x="40" y="278" width="44" height="34" rx="4"/>
+      <rect x="196" y="102" width="44" height="34" rx="4"/><rect x="196" y="146" width="44" height="34" rx="4"/><rect x="196" y="190" width="44" height="34" rx="4"/><rect x="196" y="234" width="44" height="34" rx="4"/><rect x="196" y="278" width="44" height="34" rx="4"/>
+    </g>
+    <path d="M140 330 V96" stroke="#7A2D55" stroke-width="3" fill="none" marker-end="url(#ar)"/>
+    <text class="s" x="140" y="350" text-anchor="middle">通路が広く、ステージまで素通り</text>
+  </g>
+  <!-- AFTER -->
+  <g transform="translate(20,370)">
+    <text class="en" x="0" y="22">AFTER</text><text class="t" x="0" y="42">変更後：ジグザグに</text>
+    <rect x="70" y="58" width="140" height="26" rx="6" fill="#C46A97"/><text class="s" x="140" y="75" text-anchor="middle" style="fill:#fff">メインステージ</text>
+    <g fill="#EFCDDE" stroke="#C46A97" stroke-width="2">
+      <rect x="66" y="104" width="44" height="34" rx="4" transform="rotate(-20 88 121)"/><rect x="170" y="148" width="44" height="34" rx="4" transform="rotate(20 192 165)"/>
+      <rect x="66" y="192" width="44" height="34" rx="4" transform="rotate(-20 88 209)"/><rect x="170" y="236" width="44" height="34" rx="4" transform="rotate(20 192 253)"/>
+      <rect x="66" y="280" width="44" height="34" rx="4" transform="rotate(-20 88 297)"/>
+    </g>
+    <path d="M150 330 C 190 312, 190 300, 140 284 S 90 250, 140 238 S 190 208, 140 196 S 92 166, 140 150 S 175 118, 140 96" stroke="#7A2D55" stroke-width="3" fill="none" marker-end="url(#ar)"/>
+    <text class="s" x="140" y="350" text-anchor="middle">通路が狭く斜めに → 自然に店へ立ち寄る</text>
+  </g>
+  <defs><marker id="ar" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#7A2D55"/></marker></defs>
+</svg>
