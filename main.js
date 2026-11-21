@@ -43,8 +43,8 @@ const COVER = [
   const one = (hide) => WORKS.map((w) => {
     const k = w.imgs[0][0];
     const im = `<img class="mq-photo" src="images/${k}.${CUTS.has(k) ? "png" : "jpg"}" alt="" loading="lazy">`;
-    return `<a class="mq-item" href="#w${w.no}" style="--theme:${THEME[w.no][0]}"` +
-      (hide ? ' aria-hidden="true" tabindex="-1"' : ` aria-label="${w.no} ${esc(w.title)}"`) + `>${im}</a>`;
+    return `<a class="mq-item" href="#w${w.no}" style="${themeVars(w.no)}"` +
+      (hide ? ' aria-hidden="true" tabindex="-1"' : ` aria-label="${w.no} ${esc(w.title)}"`) + `>${im}<b class="mq-no">${w.no}</b></a>`;
   }).join("");
   if (track) track.innerHTML = one(false) + one(true);
 
