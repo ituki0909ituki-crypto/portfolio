@@ -39,6 +39,7 @@ const stage = document.getElementById("stage");
 // スマホ：パソコンの表紙と同じ「人と作品がいっしょに飛び出す」並びを、人の絵と同じ縮尺で上半分に置く
 // （CSS の .human のスマホ用の位置・幅と同じ数字）
 const MT = { x: -5, y: 3, w: 110, h: 110 * (858.9 / 1207.56) / 1.2 };
+const MS = { kx: 1.15, ky: 1.6, dy: 8, size: 1.75 }; // 広げ方と大きさ
 const mq = matchMedia("(max-width: 700px)");
 COVER.forEach(([file, no, x, y, wd, rot], i) => {
   const w = byNo[no];
@@ -62,7 +63,14 @@ function placeCover() {
   stage.querySelectorAll(".float").forEach((b) => {
     const [, , px, py, pw] = COVER.find((c) => c[0] === b.dataset.file);
     const m = mq.matches;
-    const [x, y, wd] = m ? [MT.x + px * MT.w / 100, MT.y + py * MT.h / 100, pw * MT.w / 100] : [px, py, pw];
+    let [x, y, wd] = m ? [MT.x + px * MT.w / 100, MT.y + py * MT.h / 100, pw * MT.w / 100] : [px, py, pw];
+    if (m) {
+      // スマホ：人の飛び出しの中心から外へ広げて、作品を大きく（文字に重なってもよい。勢いを出す）
+      const cx = MT.x + 50 * MT.w / 100, cy = MT.y + 45 * MT.h / 100;
+      x = Math.min(97, Math.max(3, cx + (x - cx) * MS.kx));
+      y = cy + (y - cy) * MS.ky + MS.dy;
+      wd *= MS.size;
+    }
     Object.assign(b.style, { left: x + "%", top: y + "%", width: wd + "%" });
     // 人の中心あたりから飛び出してくる距離
     const ox = m ? MT.x + 50 * MT.w / 100 : 50, oy = m ? MT.y + 45 * MT.h / 100 : 45;
