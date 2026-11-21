@@ -124,7 +124,7 @@ button.float.pop .float-in { transform: scale(1.8); transition: transform .45s c
 @media (max-width: 700px) {
   .peek { width: 96px; }
   .mq-item { width: 104px; margin-right: 8px; border-radius: 12px; border-width: 4px; }
-  .mq-no { font-size: 13px; padding: 2px 6px 4px 2px; border-radius: 0 0 8px 0; }
+  .mq-no { font-size: 11px; padding: 2px 5px 4px 2px; border-radius: 0 0 7px 0; }
 }
 
 /* 帯で切り替えたあとの最初の画面は、動かさずにそのまま出す */
