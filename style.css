@@ -315,3 +315,6 @@ img.cut { background: #fff !important; }
 .hint-en::before, .hint-en::after { content: ""; width: 36px; height: 1px; background: currentColor; opacity: .5; }
 .hint-ja { display: block; margin-top: 6px; font-size: 10.5px; letter-spacing: .24em; opacity: .55; }
 @media (max-width: 700px) { .hint-en { font-size: 12px; letter-spacing: .26em; gap: 10px; } .hint-en::before, .hint-en::after { width: 22px; } }
+/* 一言の上下に余白 */
+.hint { margin: 32px 0 30px; }
+@media (max-width: 700px) { .hint { padding-top: 0; margin: 26px 0 24px; } }
