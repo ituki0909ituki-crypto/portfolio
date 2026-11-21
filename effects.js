@@ -189,7 +189,7 @@ PEEKS.forEach(([file, no, side, top, rot, delay]) => {
   b.style.setProperty("--delay", delay + "s");
   b.style.setProperty("--t", 7 + (delay % 3) + "s");
   b.setAttribute("aria-label", `${no} ${w.title} を見る`);
-  b.innerHTML = `<img src="images/cover/${file}.png" alt="">`;
+  b.innerHTML = `<img src="images/cover/${file}.webp" alt="">`;
   b.onclick = () => openWork(no, b);
   worksSec.appendChild(b);
 });

@@ -4,7 +4,7 @@ const img = (key, alt, extra = "") => {
   const [w, h] = SIZES[key] || [4, 3];
   const cut = CUTS.has(key), comp = /^c\d/.test(key);
   const cls = comp ? ' class="comp"' : cut ? ' class="cut"' : "";
-  return `<img src="images/${key}.${cut ? "png" : "jpg"}"${cls} alt="${esc(alt)}" width="${w}" height="${h}" loading="lazy" ${extra}>`;
+  return `<img src="images/${key}.webp"${cls} alt="${esc(alt)}" width="${w}" height="${h}" loading="lazy" ${extra}>`;
 };
 const byNo = Object.fromEntries(WORKS.map((w) => [w.no, w]));
 
@@ -42,7 +42,7 @@ const COVER = [
   const cut = {}; COVER.forEach(([f, no, , , w]) => { if (no && (!cut[no] || w > cut[no][1])) cut[no] = [f, w]; });
   const one = (hide) => WORKS.map((w) => {
     const k = w.imgs[0][0];
-    const im = `<img class="mq-photo" src="images/${k}.${CUTS.has(k) ? "png" : "jpg"}" alt="" loading="lazy">`;
+    const im = `<img class="mq-photo" src="images/${k}.webp" alt="" loading="lazy">`;
     return `<a class="mq-item" href="#w${w.no}" style="${themeVars(w.no)}"` +
       (hide ? ' aria-hidden="true" tabindex="-1"' : ` aria-label="${w.no} ${esc(w.title)}"`) + `>${im}<b class="mq-no">${w.no}</b></a>`;
   }).join("");
@@ -114,7 +114,7 @@ COVER.forEach(([file, no, x, y, wd, rot], i) => {
   b.style.setProperty("--i", i);
   b.style.setProperty("--dur", `${4.5 + (i % 5) * 0.9}s`);
   b.style.setProperty("--depth", (0.5 + (i % 4) * 0.4).toFixed(2));
-  b.innerHTML = `<span class="float-in"><img src="images/cover/${file}.png" alt="${w ? esc(w.title) : ""}"></span>` +
+  b.innerHTML = `<span class="float-in"><img src="images/cover/${file}.webp" alt="${w ? esc(w.title) : ""}"></span>` +
     (w ? `<span class="label"><b>${no}</b>${esc(w.title)}</span>` : "");
   if (w) {
     b.setAttribute("aria-label", `${no} ${w.title} を見る`);
@@ -271,7 +271,7 @@ let group = [], idx = 0;
 function show(i) {
   idx = (i + group.length) % group.length;
   const el = group[idx];
-  lbImg.src = `images/${el.dataset.key}.${CUTS.has(el.dataset.key) ? "png" : "jpg"}`;
+  lbImg.src = `images/${el.dataset.key}.webp`;
   lbImg.alt = lbCap.textContent = el.dataset.cap;
 }
 detail.addEventListener("click", (e) => {
