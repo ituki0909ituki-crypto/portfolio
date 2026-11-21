@@ -8,17 +8,7 @@ const img = (key, alt, extra = "") => {
 };
 const byNo = Object.fromEntries(WORKS.map((w) => [w.no, w]));
 
-// 流れる帯：全作品のサムネイルを、それぞれの作品の色のふちで並べる（同じ並びを2回つなげて、切れ目なく流す）
-{
-  const track = document.getElementById("marquee-track");
-  const one = (hide) => WORKS.map((w) => {
-    const k = w.imgs[0][0], ext = CUTS.has(k) ? "png" : "jpg";
-    return `<a class="mq-item" href="#w${w.no}" style="--theme:${THEME[w.no][0]}"` +
-      (hide ? ' aria-hidden="true" tabindex="-1"' : ` aria-label="${w.no} ${esc(w.title)}"`) +
-      `><img src="images/${k}.${ext}" alt="" loading="lazy"></a>`;
-  }).join("");
-  if (track) track.innerHTML = one(false) + one(true);
-}
+
 const themeVars = (no) => { const [c, t, on] = THEME[no]; return `--theme:${c};--theme-text:${t};--on:${on}`; };
 
 /* ---------- トップ：表紙が動き出す ----------
@@ -45,6 +35,21 @@ const COVER = [
   ["o29", "11", 55.10, 25.09, 12.49, 31.8],
   ["o30", "09", 87.23, 43.37, 17.00, -67.1],
 ];
+
+// 流れる帯：作品ごとに、その作品の色のタイルに「作品そのもの」の切り抜きをのせて並べる。
+// 色と形でひと目で見分けられるように（切り抜きがない作品は写真）。同じ並びを2回つなげて切れ目なく流す
+{
+  const track = document.getElementById("marquee-track");
+  const cut = {}; COVER.forEach(([f, no, , , w]) => { if (no && (!cut[no] || w > cut[no][1])) cut[no] = [f, w]; });
+  const one = (hide) => WORKS.map((w) => {
+    const c = cut[w.no], k = w.imgs[0][0];
+    const im = c ? `<img class="mq-cut" src="images/cover/${c[0]}.png" alt="" loading="lazy">`
+                 : `<img class="mq-photo" src="images/${k}.${CUTS.has(k) ? "png" : "jpg"}" alt="" loading="lazy">`;
+    return `<a class="mq-item" href="#w${w.no}" style="--theme:${THEME[w.no][0]}"` +
+      (hide ? ' aria-hidden="true" tabindex="-1"' : ` aria-label="${w.no} ${esc(w.title)}"`) + `>${im}</a>`;
+  }).join("");
+  if (track) track.innerHTML = one(false) + one(true);
+}
 
 const stage = document.getElementById("stage");
 // スマホ（縦長）用の並べ方 [画像: 中心の横%, 中心の縦%, 幅%]
