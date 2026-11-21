@@ -17,8 +17,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600&family=Zen+Kaku+Gothic+New:wght@400;500;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css?v=70">
-<link rel="stylesheet" href="effects.css?v=70">
+<link rel="stylesheet" href="style.css?v=71">
+<link rel="stylesheet" href="effects.css?v=71">
 </head>
 <body>
 <header class="nav">
@@ -45,13 +45,10 @@
     <p class="hint">空間演出デザイン学科　片山 樹<span class="hint-sep">　―　</span>気になる作品を押してみてください</p>
   </section>
 
-  <!-- 流れる文字の帯 -->
-  <div class="marquee" aria-hidden="true">
-    <div class="marquee-track">
-      <span>全進全力 ― ZENSHIN ZENRYOKU ― SPACE DIRECTION DESIGN ― 空間演出デザイン ― ITSUKI KATAYAMA ― </span>
-      <span>全進全力 ― ZENSHIN ZENRYOKU ― SPACE DIRECTION DESIGN ― 空間演出デザイン ― ITSUKI KATAYAMA ― </span>
-    </div>
-  </div>
+  <!-- 流れる作品の帯（押すとその作品へ） -->
+  <nav class="marquee" aria-label="作品（流れる帯）">
+    <div class="marquee-track" id="marquee-track"></div>
+  </nav>
 
   <!-- 作品一覧 -->
   <section class="works" id="works">
@@ -101,9 +98,9 @@
   <button class="lb-next" aria-label="次の写真">›</button>
 </div>
 
-<script src="sizes.js?v=70"></script>
-<script src="works.js?v=70"></script>
-<script src="main.js?v=70"></script>
-<script src="effects.js?v=70"></script>
+<script src="sizes.js?v=71"></script>
+<script src="works.js?v=71"></script>
+<script src="main.js?v=71"></script>
+<script src="effects.js?v=71"></script>
 </body>
 </html>

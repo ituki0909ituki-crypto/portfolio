@@ -7,6 +7,17 @@ const img = (key, alt, extra = "") => {
   return `<img src="images/${key}.${cut ? "png" : "jpg"}"${cls} alt="${esc(alt)}" width="${w}" height="${h}" loading="lazy" ${extra}>`;
 };
 const byNo = Object.fromEntries(WORKS.map((w) => [w.no, w]));
+
+// 流れる帯：全作品の写真・番号・名前を並べる（同じ並びを2回つなげて、切れ目なく流す）
+{
+  const track = document.getElementById("marquee-track");
+  const one = (hide) => WORKS.map((w) => {
+    const k = w.imgs[0][0], ext = CUTS.has(k) ? "png" : "jpg";
+    return `<a class="mq-item" href="#w${w.no}"${hide ? ' aria-hidden="true" tabindex="-1"' : ""}>` +
+      `<img src="images/${k}.${ext}" alt="" loading="lazy"><span class="mq-no">${w.no}</span><span class="mq-t">${esc(w.title)}</span></a>`;
+  }).join("");
+  if (track) track.innerHTML = one(false) + one(true);
+}
 const themeVars = (no) => { const [c, t, on] = THEME[no]; return `--theme:${c};--theme-text:${t};--on:${on}`; };
 
 /* ---------- トップ：表紙が動き出す ----------
