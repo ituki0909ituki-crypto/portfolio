@@ -225,11 +225,11 @@ button.float:hover, button.float:focus-visible { z-index: 5; --s: 1.18; outline:
 @media (max-width: 700px) {
   /* 表紙：縦長の青空いっぱいに */
   .stage-wrap { padding: 0; }
-  .stage { width: 100%; aspect-ratio: 5 / 7; max-height: none; min-height: 0; }
+  .stage { width: 100%; aspect-ratio: 5 / 8; max-height: none; min-height: 0; }
   .frame { left: 0; top: 0; width: 100%; height: 100%; border-radius: 0; clip-path: none;
-    background: linear-gradient(180deg, #0E4E93 0%, #1A76BD 53.8%); }
+    background: linear-gradient(180deg, #0E4E93 0%, #1A76BD 59.6%); }
   /* 「全進全力」とオレンジは元の絵のまま、人と作品の飛び出しの下に重ねる */
-  .frame .bg { display: block; inset: auto; left: 0; top: 53.8%; width: 100%; height: auto; }
+  .frame .bg { display: block; inset: auto; left: 0; top: 59.6%; width: 100%; height: auto; }
   .human { left: -5%; top: 3%; width: 110%; height: auto; }
   .hint { padding: 10px 16px 0; font-size: 12px; }
   .hint-sep { display: block; height: 0; overflow: hidden; }
