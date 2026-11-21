@@ -302,3 +302,9 @@ img.cut { background: #fff !important; }
 @media (max-width: 700px) {
   .float img { filter: drop-shadow(0 calc(var(--z, 1) * 6px + 1px) calc(var(--z, 1) * 8px + 2px) rgba(0, 20, 60, calc(var(--z, 1) * .28 + .08))); }
 }
+
+/* スマホ：作品の押せる範囲を、見た目より少し広くする（指で押しやすく） */
+@media (max-width: 700px) {
+  .float:not(.deco)::after { content: ""; position: absolute; inset: -8px; }
+  .float.deco { pointer-events: none; }
+}
