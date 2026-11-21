@@ -8,13 +8,14 @@ const img = (key, alt, extra = "") => {
 };
 const byNo = Object.fromEntries(WORKS.map((w) => [w.no, w]));
 
-// 流れる帯：全作品の写真・番号・名前を並べる（同じ並びを2回つなげて、切れ目なく流す）
+// 流れる帯：全作品のサムネイルを、それぞれの作品の色のふちで並べる（同じ並びを2回つなげて、切れ目なく流す）
 {
   const track = document.getElementById("marquee-track");
   const one = (hide) => WORKS.map((w) => {
     const k = w.imgs[0][0], ext = CUTS.has(k) ? "png" : "jpg";
-    return `<a class="mq-item" href="#w${w.no}"${hide ? ' aria-hidden="true" tabindex="-1"' : ""}>` +
-      `<img src="images/${k}.${ext}" alt="" loading="lazy"><span class="mq-no">${w.no}</span><span class="mq-t">${esc(w.title)}</span></a>`;
+    return `<a class="mq-item" href="#w${w.no}" style="--theme:${THEME[w.no][0]}"` +
+      (hide ? ' aria-hidden="true" tabindex="-1"' : ` aria-label="${w.no} ${esc(w.title)}"`) +
+      `><img src="images/${k}.${ext}" alt="" loading="lazy"></a>`;
   }).join("");
   if (track) track.innerHTML = one(false) + one(true);
 }
