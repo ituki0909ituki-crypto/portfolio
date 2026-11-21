@@ -227,12 +227,9 @@ button.float:hover, button.float:focus-visible { z-index: 5; --s: 1.18; outline:
   .stage-wrap { padding: 0; }
   .stage { width: 100%; aspect-ratio: 9 / 17; max-height: none; min-height: 0; }
   .frame { left: 0; top: 0; width: 100%; height: 100%; border-radius: 0; clip-path: none;
-    background: linear-gradient(180deg, var(--sky-top), var(--sky-bottom)); }
-  .frame .bg { display: none; }
-  .frame::before, .frame::after { content: ""; position: absolute; left: 0; background: var(--red); }
-  .frame::before { top: 34%; width: 100%; height: 16%; clip-path: polygon(0 0, 100% 45%, 100% 100%, 0 60%); }
-  .frame::after { top: 66%; width: 100%; height: 34%; clip-path: polygon(0 0, 100% 40%, 100% 100%, 0 100%); }
-  .m-word { display: block; position: absolute; left: 2%; top: 40%; width: 96%; max-width: none; transform: rotate(-20deg); }
+    /* 表紙の絵（全進全力とオレンジの奥行き）は元のデータのまま下に置き、上は同じ青空を続ける */
+    background: linear-gradient(180deg, #0E4E93 0%, #1A76BD 65.8%); }
+  .frame .bg { display: block; inset: auto; left: 0; bottom: 0; width: 100%; height: auto; }
   .human { left: -6%; top: 6%; width: 122%; height: auto; }
   .hint { padding: 10px 16px 0; font-size: 12px; }
   .hint-sep { display: block; height: 0; overflow: hidden; }
@@ -295,3 +292,8 @@ img.cut { background: #fff !important; }
   box-shadow: 0 0 0 2px color-mix(in srgb, var(--theme) 45%, transparent); }
 .diagram img { display: block; width: 100%; height: auto; }
 @media (max-width: 700px) { .diagram-row { margin: -8px 0 48px; } .diagram { padding: 14px 10px; border-radius: 16px; width: min(100%, 360px); } }
+
+/* パソコンでは表紙の外（クリーム色）に名前が乗るので、白い枠に濃い文字で */
+@media (min-width: 701px) {
+  .nav-name { color: var(--ink); text-shadow: none; background: rgba(255, 255, 255, .92); padding: 6px 16px; border-radius: 18px; }
+}
