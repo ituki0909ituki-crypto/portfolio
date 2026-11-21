@@ -49,6 +49,38 @@ const COVER = [
       (hide ? ' aria-hidden="true" tabindex="-1"' : ` aria-label="${w.no} ${esc(w.title)}"`) + `>${im}</a>`;
   }).join("");
   if (track) track.innerHTML = one(false) + one(true);
+
+  // ひとりでにゆっくり流れつつ、指でスワイプ・マウスでドラッグ・ホイールで動かせる。
+  // さわっている間は止まり、はなして少しすると、また流れはじめる。端まで行ったら切れ目なくつながる
+  const band = track && track.parentElement;
+  if (band) {
+    let wait = 0, drag = null, moved = false;
+    const half = () => track.scrollWidth / 2;
+    const touch = () => { wait = performance.now() + 1800; };
+    const loop = () => {
+      if (performance.now() > wait && !drag && !matchMedia("(prefers-reduced-motion: reduce)").matches) band.scrollLeft += 0.6;
+      const h = half();
+      if (band.scrollLeft >= h) band.scrollLeft -= h;
+      else if (band.scrollLeft <= 0) band.scrollLeft += h;
+      requestAnimationFrame(loop);
+    };
+    requestAnimationFrame(loop);
+    ["touchstart", "wheel", "keydown"].forEach((t) => band.addEventListener(t, touch, { passive: true }));
+    band.addEventListener("scroll", () => { if (drag || performance.now() < wait) touch(); }, { passive: true });
+    band.addEventListener("pointerdown", (e) => {
+      if (e.pointerType !== "mouse") return;
+      drag = { x: e.clientX, left: band.scrollLeft }; moved = false; band.classList.add("dragging"); touch();
+    });
+    addEventListener("pointermove", (e) => {
+      if (!drag) return;
+      const dx = e.clientX - drag.x; if (Math.abs(dx) > 5) moved = true;
+      band.scrollLeft = drag.left - dx; touch();
+    });
+    addEventListener("pointerup", () => { if (drag) { drag = null; band.classList.remove("dragging"); touch(); } });
+    // ドラッグしたあとに指をはなしたときは、作品を開かない
+    band.addEventListener("click", (e) => { if (moved) { e.preventDefault(); e.stopPropagation(); moved = false; } }, true);
+    band.addEventListener("dragstart", (e) => e.preventDefault());
+  }
 }
 
 const stage = document.getElementById("stage");

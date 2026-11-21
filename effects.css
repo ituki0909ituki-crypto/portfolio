@@ -31,9 +31,10 @@
 .wipe.out i:nth-child(1) { transition-delay: .12s; }
 
 /* --- 3. 流れる文字の帯 --- */
-.marquee { overflow: hidden; background: var(--red); color: #fff; padding: 12px 0; transform: rotate(-1.6deg); margin: 8px -10px -18px; position: relative; z-index: 3; }
-.marquee-track { display: flex; width: max-content; animation: marquee 55s linear infinite; }
-.marquee:hover .marquee-track, .marquee:focus-within .marquee-track { animation-play-state: paused; }
+.marquee { overflow-x: auto; overflow-y: hidden; scrollbar-width: none; overscroll-behavior-x: contain; cursor: grab; background: var(--red); color: #fff; padding: 12px 0; transform: rotate(-1.6deg); margin: 8px -10px -18px; position: relative; z-index: 3; }
+.marquee::-webkit-scrollbar { display: none; }
+.marquee.dragging { cursor: grabbing; }
+.marquee-track { display: flex; width: max-content; }
 /* 流れる帯の作品：作品の色のタイルに、作品の切り抜き。押すとその作品が開く */
 .mq-item { display: grid; place-items: center; width: 104px; height: 88px; margin-right: 14px; flex: none; border-radius: 18px;
   background: var(--theme); border: 3px solid #fff; overflow: hidden; transition: transform .25s; }
