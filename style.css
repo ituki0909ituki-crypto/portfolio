@@ -225,17 +225,12 @@ button.float:hover, button.float:focus-visible { z-index: 5; --s: 1.18; outline:
 @media (max-width: 700px) {
   /* 表紙：縦長の青空いっぱいに */
   .stage-wrap { padding: 0; }
-  .stage { width: 100%; aspect-ratio: 9 / 17; max-height: none; min-height: 0; }
+  .stage { width: 100%; aspect-ratio: 5 / 6; max-height: none; min-height: 0; }
   .frame { left: 0; top: 0; width: 100%; height: 100%; border-radius: 0; clip-path: none;
-    background: linear-gradient(180deg, #0E4E93 0%, #50B6E8 100%); }
-  .frame .bg { display: none; }
-  /* 縦長用：「全進全力」を画面いっぱいに斜めに置き、文字に沿って奥へ細くなるオレンジ（地面）を敷く */
-  .m-art { display: block; position: absolute; left: 5%; top: 40%; width: 84%; aspect-ratio: 1466.2 / 710.9; transform: rotate(-20deg); }
-  .m-word { display: block; position: absolute; inset: 0; width: 100%; height: 100%; max-width: none; }
-  .m-wedge { position: absolute; left: -200%; top: -100%; width: 500%; height: 600%; background: #EB5F00;
-    clip-path: polygon(11.67% 24.02%, 60.10% 32.46%, 60.10% 33.63%, 11.67% 98.34%); }
-  /* 人が弧をえがいて文字を飛びこえる */
-  .human { left: -8%; top: 22%; width: 140%; height: auto; }
+    background: linear-gradient(180deg, #0E4E93 0%, #1A76BD 45.8%); }
+  /* 「全進全力」とオレンジは元の絵のまま、人と作品の飛び出しの下に重ねる */
+  .frame .bg { display: block; inset: auto; left: 0; top: 45.8%; width: 100%; height: auto; }
+  .human { left: -5%; top: 3%; width: 110%; height: auto; }
   .hint { padding: 10px 16px 0; font-size: 12px; }
   .hint-sep { display: block; height: 0; overflow: hidden; }
   .label { font-size: 12px; }

@@ -36,9 +36,9 @@ const COVER = [
 
 const stage = document.getElementById("stage");
 // スマホ（縦長）用の並べ方 [画像: 中心の横%, 中心の縦%, 幅%]
-const MOBILE = { // まん中の「全進全力」と人の弧をあけて、上の空と下の地面に作品を浮かべる
-  o22: [10, 26.7, 15], o28: [44, 4, 9], o29: [78, 5, 20], o36: [92, 21.6, 11], o38: [24, 14.3, 16], o25: [60, 19.5, 24], o23: [26, 32.9, 38], o33: [80, 35, 20], o21: [9, 66.9, 11], o31: [36, 68.2, 18], o34: [60, 45.3, 9], o37: [83, 69.5, 20], o3355: [20, 74.6, 14], o35: [57, 75.3, 9], o24: [34, 82.4, 46], o30: [85, 80.4, 24], o27: [14, 91.4, 24], o26: [48, 92, 26], o32: [81, 91.4, 30]
-};
+// スマホ：パソコンの表紙と同じ「人と作品がいっしょに飛び出す」並びを、人の絵と同じ縮尺で上半分に置く
+// （CSS の .human のスマホ用の位置・幅と同じ数字）
+const MT = { x: -5, y: 3, w: 110, h: 110 * (858.9 / 1207.56) / 1.2 };
 const mq = matchMedia("(max-width: 700px)");
 COVER.forEach(([file, no, x, y, wd, rot], i) => {
   const w = byNo[no];
@@ -61,11 +61,13 @@ COVER.forEach(([file, no, x, y, wd, rot], i) => {
 function placeCover() {
   stage.querySelectorAll(".float").forEach((b) => {
     const [, , px, py, pw] = COVER.find((c) => c[0] === b.dataset.file);
-    const [x, y, wd] = mq.matches ? MOBILE[b.dataset.file] : [px, py, pw];
+    const m = mq.matches;
+    const [x, y, wd] = m ? [MT.x + px * MT.w / 100, MT.y + py * MT.h / 100, pw * MT.w / 100] : [px, py, pw];
     Object.assign(b.style, { left: x + "%", top: y + "%", width: wd + "%" });
     // 人の中心あたりから飛び出してくる距離
-    b.style.setProperty("--fx", `${(50 - x) * 0.8}cqw`);
-    b.style.setProperty("--fy", `${(45 - y) * 0.8}cqh`);
+    const ox = m ? MT.x + 50 * MT.w / 100 : 50, oy = m ? MT.y + 45 * MT.h / 100 : 45;
+    b.style.setProperty("--fx", `${(ox - x) * 0.8}cqw`);
+    b.style.setProperty("--fy", `${(oy - y) * 0.8}cqh`);
   });
 }
 placeCover();
