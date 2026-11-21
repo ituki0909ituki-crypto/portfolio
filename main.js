@@ -55,14 +55,22 @@ const COVER = [
   const band = track && track.parentElement;
   if (band) {
     let drag = null, moved = false, finger = false;
+    // スマホのブラウザは scrollLeft の小数を切り捨てるので、位置は小数のまま pos に持って、毎回それを入れる
+    let pos = 0, last = -1;
     const half = () => track.scrollWidth / 2;
     const loop = () => {
-      // 指でさわっている間だけは指に任せる（ずれないように）。はなせばすぐまた流れる
-      if (!finger) band.scrollLeft += 0.6;
+      // 指やホイールで動かされたら、その位置から続ける
+      if (last >= 0 && Math.abs(band.scrollLeft - last) > 1) pos = band.scrollLeft;
       if (drag) drag.left += 0.6;
+      if (!finger) pos += 0.6;   // 指でさわっている間だけは指に任せる。はなせばすぐまた流れる
+      else pos = band.scrollLeft;
       const h = half();
-      if (band.scrollLeft >= h) { band.scrollLeft -= h; if (drag) drag.left -= h; }
-      else if (band.scrollLeft <= 0) { band.scrollLeft += h; if (drag) drag.left += h; }
+      if (h > 0) {
+        if (pos >= h) { pos -= h; if (drag) drag.left -= h; }
+        else if (pos <= 0) { pos += h; if (drag) drag.left += h; }
+      }
+      if (!finger) band.scrollLeft = pos;
+      last = band.scrollLeft;
       requestAnimationFrame(loop);
     };
     requestAnimationFrame(loop);
@@ -75,7 +83,7 @@ const COVER = [
     addEventListener("pointermove", (e) => {
       if (!drag) return;
       const dx = e.clientX - drag.x; if (Math.abs(dx) > 5) moved = true;
-      band.scrollLeft = drag.left - dx;
+      band.scrollLeft = drag.left - dx; pos = band.scrollLeft; last = pos;
     });
     addEventListener("pointerup", () => { if (drag) { drag = null; band.classList.remove("dragging"); } });
     // ドラッグしたあとに指をはなしたときは、作品を開かない
