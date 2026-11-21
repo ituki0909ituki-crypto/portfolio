@@ -38,8 +38,8 @@ const stage = document.getElementById("stage");
 // スマホ（縦長）用の並べ方 [画像: 中心の横%, 中心の縦%, 幅%]
 // スマホ：パソコンの表紙と同じ「人と作品がいっしょに飛び出す」並びを、人の絵と同じ縮尺で上半分に置く
 // （CSS の .human のスマホ用の位置・幅と同じ数字）
-const MT = { x: -5, y: 3, w: 110, h: 110 * (858.9 / 1207.56) / 1.2 };
-const MS = { kx: 1.15, ky: 1.6, dy: 8, size: 1.75 }; // 広げ方と大きさ
+const MT = { x: -5, y: 3, w: 110, h: 110 * (858.9 / 1207.56) / 1.4 };
+const MS = { kx: 1.12, ky: 1.95, dy: 9, size: 1.35 }; // 広げ方と大きさ
 const mq = matchMedia("(max-width: 700px)");
 COVER.forEach(([file, no, x, y, wd, rot], i) => {
   const w = byNo[no];
