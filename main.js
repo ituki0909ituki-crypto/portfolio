@@ -36,15 +36,13 @@ const COVER = [
   ["o30", "09", 87.23, 43.37, 17.00, -67.1],
 ];
 
-// 流れる帯：作品ごとに、その作品の色のタイルに「作品そのもの」の切り抜きをのせて並べる。
-// 色と形でひと目で見分けられるように（切り抜きがない作品は写真）。同じ並びを2回つなげて切れ目なく流す
+// 流れる帯：作品ごとのサムネイル写真を、その作品の色のふちで並べる。同じ並びを2回つなげて切れ目なく流す
 {
   const track = document.getElementById("marquee-track");
   const cut = {}; COVER.forEach(([f, no, , , w]) => { if (no && (!cut[no] || w > cut[no][1])) cut[no] = [f, w]; });
   const one = (hide) => WORKS.map((w) => {
-    const c = cut[w.no], k = w.imgs[0][0];
-    const im = c ? `<img class="mq-cut" src="images/cover/${c[0]}.png" alt="" loading="lazy">`
-                 : `<img class="mq-photo" src="images/${k}.${CUTS.has(k) ? "png" : "jpg"}" alt="" loading="lazy">`;
+    const k = w.imgs[0][0];
+    const im = `<img class="mq-photo" src="images/${k}.${CUTS.has(k) ? "png" : "jpg"}" alt="" loading="lazy">`;
     return `<a class="mq-item" href="#w${w.no}" style="--theme:${THEME[w.no][0]}"` +
       (hide ? ' aria-hidden="true" tabindex="-1"' : ` aria-label="${w.no} ${esc(w.title)}"`) + `>${im}</a>`;
   }).join("");

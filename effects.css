@@ -37,7 +37,7 @@
 .marquee-track { display: flex; width: max-content; }
 /* 流れる帯の作品：作品の色のタイルに、作品の切り抜き。押すとその作品が開く */
 .mq-item { display: grid; place-items: center; width: 144px; height: 84px; margin-right: 14px; flex: none; border-radius: 18px;
-  background: var(--theme); border: 3px solid #fff; overflow: hidden; transition: transform .25s; }
+  background: var(--theme); border: 4px solid var(--theme); overflow: hidden; transition: transform .25s; }
 .mq-item:hover { transform: translateY(-4px) rotate(-3deg); }
 .mq-cut { width: 86%; height: 86%; object-fit: contain; filter: drop-shadow(0 3px 4px rgba(0, 0, 0, .25)); }
 .mq-photo { width: 100%; height: 100%; object-fit: cover; }
