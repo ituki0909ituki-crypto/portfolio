@@ -39,7 +39,7 @@ const stage = document.getElementById("stage");
 // スマホ：パソコンの表紙と同じ「人と作品がいっしょに飛び出す」並びを、人の絵と同じ縮尺で上半分に置く
 // （CSS の .human のスマホ用の位置・幅と同じ数字）
 const MT = { x: -5, y: 3, w: 110, h: 110 * (858.9 / 1207.56) / 1.4 };
-const MS = { kx: 1.12, ky: 1.95, dy: 9, size: 1.35 }; // 広げ方と大きさ
+const MS = { ox: 6, oy: 20, kx: 1.12, ky: 2.0, dy: 4, size: 1.7 }; // 蹴りだす位置（人の足もと）・広げ方・大きさ
 const mq = matchMedia("(max-width: 700px)");
 COVER.forEach(([file, no, x, y, wd, rot], i) => {
   const w = byNo[no];
@@ -65,15 +65,15 @@ function placeCover() {
     const m = mq.matches;
     let [x, y, wd] = m ? [MT.x + px * MT.w / 100, MT.y + py * MT.h / 100, pw * MT.w / 100] : [px, py, pw];
     if (m) {
-      // スマホ：人の飛び出しの中心から外へ広げて、作品を大きく（文字に重なってもよい。勢いを出す）
-      const cx = MT.x + 50 * MT.w / 100, cy = MT.y + 45 * MT.h / 100;
-      x = Math.min(97, Math.max(3, cx + (x - cx) * MS.kx));
-      y = cy + (y - cy) * MS.ky + MS.dy;
-      wd *= MS.size;
+      // スマホ：人が蹴とばしたように、人の足もとから外へ放射状に飛ばす（遠くへ飛んだものほど手前に来て大きく見える）
+      x = MS.ox + (x - MS.ox) * MS.kx; y = MS.oy + (y - MS.oy) * MS.ky + MS.dy;
+      const d = Math.min(1, Math.hypot(x - MS.ox, (y - MS.oy) * 0.7) / 95);
+      wd *= MS.size * (0.45 + 1.3 * d * d);
+      x = Math.min(100, Math.max(3, x)); // 手前に来た大きいものは画面の端からはみ出してもよい
     }
     Object.assign(b.style, { left: x + "%", top: y + "%", width: wd + "%" });
     // 人の中心あたりから飛び出してくる距離
-    const ox = m ? MT.x + 50 * MT.w / 100 : 50, oy = m ? MT.y + 45 * MT.h / 100 : 45;
+    const ox = m ? MS.ox : 50, oy = m ? MS.oy : 45; // スマホは人の足もとから飛び出す
     b.style.setProperty("--fx", `${(ox - x) * 0.8}cqw`);
     b.style.setProperty("--fy", `${(oy - y) * 0.8}cqh`);
   });
