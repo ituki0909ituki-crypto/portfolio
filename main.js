@@ -39,7 +39,14 @@ const stage = document.getElementById("stage");
 // スマホ：パソコンの表紙と同じ「人と作品がいっしょに飛び出す」並びを、人の絵と同じ縮尺で上半分に置く
 // （CSS の .human のスマホ用の位置・幅と同じ数字）
 const MT = { x: -5, y: 3, w: 110, h: 110 * (858.9 / 1207.56) / 1.4 };
-const MS = { ox: 6, oy: 20, kx: 1.12, ky: 2.0, dy: 4, size: 1.7 }; // 蹴りだす位置（人の足もと）・広げ方・大きさ
+// スマホ：画面全体（空・文字・オレンジの上）にバランスよく散らばらせる [中心の横%, 中心の縦%, 幅%]
+const MOBILE = {
+  o29: [24, 14, 18], o36: [86, 10, 13], o28: [56, 12, 10],
+  o38: [10, 29, 14], o33: [36, 27, 15], o25: [63, 26, 28], o30: [88, 33, 22],
+  o23: [28, 44, 42], o31: [66, 45, 14], o22: [8, 57, 14], o34: [50, 56, 8], o37: [84, 55, 20],
+  o24: [40, 69, 50], o3355: [88, 70, 12], o21: [10, 79, 9], o35: [63, 82, 9],
+  o27: [16, 90, 22], o26: [50, 91, 18], o32: [82, 88, 28],
+};
 const mq = matchMedia("(max-width: 700px)");
 COVER.forEach(([file, no, x, y, wd, rot], i) => {
   const w = byNo[no];
@@ -64,16 +71,10 @@ function placeCover() {
     const [, , px, py, pw] = COVER.find((c) => c[0] === b.dataset.file);
     const m = mq.matches;
     let [x, y, wd] = m ? [MT.x + px * MT.w / 100, MT.y + py * MT.h / 100, pw * MT.w / 100] : [px, py, pw];
-    if (m) {
-      // スマホ：人が蹴とばしたように、人の足もとから外へ放射状に飛ばす（遠くへ飛んだものほど手前に来て大きく見える）
-      x = MS.ox + (x - MS.ox) * MS.kx; y = MS.oy + (y - MS.oy) * MS.ky + MS.dy;
-      const d = Math.min(1, Math.hypot(x - MS.ox, (y - MS.oy) * 0.7) / 95);
-      wd *= MS.size * (0.45 + 1.3 * d * d);
-      x = Math.min(100, Math.max(3, x)); // 手前に来た大きいものは画面の端からはみ出してもよい
-    }
+    if (m) [x, y, wd] = MOBILE[b.dataset.file];
     Object.assign(b.style, { left: x + "%", top: y + "%", width: wd + "%" });
     // 人の中心あたりから飛び出してくる距離
-    const ox = m ? MS.ox : 50, oy = m ? MS.oy : 45; // スマホは人の足もとから飛び出す
+    const ox = m ? 12 : 50, oy = m ? 18 : 45; // スマホは人のあたりから飛び出す
     b.style.setProperty("--fx", `${(ox - x) * 0.8}cqw`);
     b.style.setProperty("--fy", `${(oy - y) * 0.8}cqh`);
   });
