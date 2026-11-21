@@ -36,7 +36,7 @@
 .marquee.dragging { cursor: grabbing; }
 .marquee-track { display: flex; width: max-content; }
 /* 流れる帯の作品：作品の色のタイルに、作品の切り抜き。押すとその作品が開く */
-.mq-item { display: grid; place-items: center; width: 104px; height: 88px; margin-right: 14px; flex: none; border-radius: 18px;
+.mq-item { display: grid; place-items: center; width: 144px; height: 84px; margin-right: 14px; flex: none; border-radius: 18px;
   background: var(--theme); border: 3px solid #fff; overflow: hidden; transition: transform .25s; }
 .mq-item:hover { transform: translateY(-4px) rotate(-3deg); }
 .mq-cut { width: 86%; height: 86%; object-fit: contain; filter: drop-shadow(0 3px 4px rgba(0, 0, 0, .25)); }
@@ -119,7 +119,7 @@ button.float.pop .float-in { transform: scale(1.8); transition: transform .45s c
 
 @media (max-width: 700px) {
   .peek { width: 96px; }
-  .mq-item { width: 80px; height: 68px; margin-right: 10px; border-radius: 14px; }
+  .mq-item { width: 108px; height: 64px; margin-right: 10px; border-radius: 14px; }
 }
 
 /* 帯で切り替えたあとの最初の画面は、動かさずにそのまま出す */
