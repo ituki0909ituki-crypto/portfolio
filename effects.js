@@ -151,7 +151,7 @@ if (fine && !reduce) {
     cur.style.transform = `translate(${cx}px, ${cy}px)`;
     requestAnimationFrame(loop);
   })();
-  const VIEW = "button.float, .peek, .card, [data-key], .pager a";
+  const VIEW = "button.float, .human-hit, .peek, .card, [data-key], .pager a";
   document.addEventListener("pointerover", (e) => {
     const t = e.target.closest(VIEW);
     cur.classList.toggle("big", !!t);
@@ -193,3 +193,82 @@ PEEKS.forEach(([file, no, side, top, rot, delay]) => {
   b.onclick = () => openWork(no, b);
   worksSec.appendChild(b);
 });
+
+/* --- 7. 遊び心：全進全力の人 --- */
+const humanEl = document.querySelector(".human");
+// (1) 表紙の人を押すと、もう一回作品を蹴飛ばす
+document.getElementById("human-hit").addEventListener("click", () => {
+  if (!stageEl.classList.contains("ready")) return;
+  humanEl.classList.remove("kick", "hop"); void humanEl.offsetWidth; humanEl.classList.add("kick");
+  setTimeout(() => humanEl.classList.remove("kick"), 600);
+  if (navigator.vibrate) navigator.vibrate(18);
+  stageEl.querySelectorAll(".float").forEach((f) => {
+    f.classList.remove("settled", "refly");
+    f.style.removeProperty("--dx"); f.style.removeProperty("--dy");
+    void f.offsetWidth;
+    f.classList.add("refly");
+  });
+  clearTimeout(window._refly);
+  window._refly = setTimeout(() => stageEl.querySelectorAll(".float").forEach((f) => { f.classList.remove("refly"); f.classList.add("settled"); }), 2000);
+});
+// 押せるとわかるように、表紙が見えているあいだ、ときどき跳ねる
+if (!reduce) setInterval(() => {
+  if (scrollY > innerHeight * 0.6 || humanEl.classList.contains("kick")) return;
+  humanEl.classList.add("hop");
+  setTimeout(() => humanEl.classList.remove("hop"), 520);
+}, 5200);
+
+// (2) 作品ページへ切り替えるとき、人が画面を横切る
+{
+  const m = document.createElement("img"); m.className = "wipe-man"; m.src = "images/cover/runner.svg"; m.alt = ""; wipe.appendChild(m);
+  const orig = window.playWipe;
+  window.playWipe = (cat, done, fromEl) => {
+    if (!reduce && !wiping) m.animate(
+      [{ transform: "translateX(-60vmin) scaleX(-1)", opacity: 1 }, { transform: "translateX(calc(100vw + 20vmin)) scaleX(-1)", opacity: 1 }],
+      { duration: 640, delay: fromEl ? 230 : 10, easing: "cubic-bezier(.3, 0, .6, 1)", fill: "backwards" });
+    orig(cat, done, fromEl);
+  };
+}
+
+// (3) スクロールに合わせて画面の下を人が走る。走った跡が進み具合
+if (!reduce) {
+  const r = document.createElement("div");
+  r.className = "runner"; r.setAttribute("aria-hidden", "true");
+  r.innerHTML = '<i class="runner-trail"></i><img class="runner-man" src="images/cover/runner.svg" alt="">';
+  document.body.appendChild(r);
+  const detail = document.getElementById("detail");
+  let last = -1, stopT, raf = 0, finaleSeen = false;
+  const update = () => {
+    raf = 0;
+    const inDetail = detail && !detail.hidden;
+    const sc = inDetail ? detail : document.scrollingElement;
+    const max = sc.scrollHeight - sc.clientHeight;
+    const y = sc.scrollTop;
+    const p = max > 0 ? Math.min(1, Math.max(0, y / max)) : 0;
+    // 表紙が見えているあいだと、最後の「全進全力」が見えているあいだは出さない
+    const fin = !inDetail && document.getElementById("finale").getBoundingClientRect().top < innerHeight - 40;
+    r.classList.toggle("on", (inDetail ? y > 40 : y > innerHeight * 0.5) && !fin);
+    r.style.setProperty("--px", (p * (innerWidth - 16)).toFixed(1) + "px");
+    if (last >= 0 && y !== last) {
+      r.style.setProperty("--dir", y > last ? -1 : 1);
+      r.classList.add("run");
+      clearTimeout(stopT); stopT = setTimeout(() => r.classList.remove("run"), 140);
+    }
+    last = y;
+  };
+  const req = () => { if (!raf) raf = requestAnimationFrame(update); };
+  addEventListener("scroll", req, { passive: true });
+  detail && detail.addEventListener("scroll", req, { passive: true });
+  addEventListener("resize", req);
+  addEventListener("hashchange", () => { last = -1; setTimeout(req, 50); });
+  req();
+}
+
+// (4) 最後まで見た人へ：人が駆け抜けて「全進全力」
+{
+  const fin = document.getElementById("finale");
+  if (reduce) fin.classList.add("go");
+  else new IntersectionObserver((es, o) => es.forEach((e) => {
+    if (e.isIntersecting) { fin.classList.add("go"); o.disconnect(); }
+  }), { threshold: 0.6 }).observe(fin);
+}

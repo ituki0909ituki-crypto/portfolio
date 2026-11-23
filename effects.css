@@ -130,3 +130,71 @@ button.float.pop .float-in { transform: scale(1.8); transition: transform .45s c
 /* 帯で切り替えたあとの最初の画面は、動かさずにそのまま出す */
 .instant, .instant::before, .instant figure, .instant > img { transition: none !important; }
 .detail.instant { transition: none !important; }
+
+/* ===== 遊び心：全進全力の人 ===== */
+/* 1. 表紙の人を押すと、もう一回蹴飛ばす */
+.human-box { position: absolute; left: 0; top: 0; width: 100%; height: 100%; z-index: 3; pointer-events: none; }
+.human-hit { position: absolute; left: 7%; top: 16%; width: 13%; height: 28%; border: 0; padding: 0; background: none;
+  border-radius: 50%; cursor: pointer; pointer-events: auto; -webkit-tap-highlight-color: transparent; }
+.human-hit:focus-visible { outline: 3px solid #fff; outline-offset: 2px; }
+.ready .human.kick { animation: kick .55s cubic-bezier(.3, 0, .2, 1); }
+@keyframes kick {
+  0% { rotate: 0deg; scale: 1; }
+  35% { rotate: -9deg; scale: .94; }
+  65% { rotate: 5deg; scale: 1.06; }
+  100% { rotate: 0deg; scale: 1; }
+}
+.ready .float.refly { transition: none; animation: refly 1s calc(.12s + var(--i) * .035s) cubic-bezier(.34, 1.56, .64, 1) both; }
+@keyframes refly {
+  from { transform: translate(var(--fx), var(--fy)) scale(0); opacity: 0; }
+  20% { opacity: 1; }
+  to { transform: none; opacity: 1; }
+}
+/* 押せるとわかるように、ときどき人がぴょこっと跳ねる */
+.ready .human.hop { animation: hop .5s cubic-bezier(.3, 0, .3, 1); }
+@keyframes hop { 40% { translate: 0 -1.6%; rotate: -2deg; } }
+
+/* 2. スクロールに合わせて、画面の下を人が走る（走った跡が進み具合） */
+.runner { position: fixed; left: 0; right: 0; bottom: calc(10px + env(safe-area-inset-bottom)); height: 46px; z-index: 31;
+  pointer-events: none; opacity: 0; transition: opacity .3s; }
+.runner.on { opacity: 1; }
+.runner-trail { position: absolute; left: 0; bottom: 6px; height: 4px; width: var(--px, 0px); border-radius: 0 4px 4px 0;
+  background: linear-gradient(90deg, transparent, var(--orange) 40%); }
+.runner-man { position: absolute; bottom: 0; left: 0; height: 46px; width: auto;
+  transform: translateX(calc(var(--px, 0px) - 44px)) scaleX(var(--dir, -1)); transform-origin: 50% 50%;
+  -webkit-mask-image: linear-gradient(90deg, #000 40%, transparent 92%); mask-image: linear-gradient(90deg, #000 40%, transparent 92%);
+  filter: drop-shadow(0 1px 1px rgba(0, 0, 0, .25)); }
+.runner.run .runner-man { animation: stride .26s ease-in-out infinite alternate; }
+@keyframes stride { from { translate: 0 0; rotate: 0deg; } to { translate: 0 -5px; rotate: -4deg; } }
+.runner.goal .runner-man { transition: transform .6s cubic-bezier(.6, 0, .9, .4); transform: translateX(115vw) scaleX(-1); }
+@media (max-width: 700px) {
+  .runner { height: 36px; } .runner-man { height: 36px; transform: translateX(calc(var(--px, 0px) - 34px)) scaleX(var(--dir, -1)); }
+  .human-box { left: -5%; top: 3%; width: 110%; height: auto; aspect-ratio: 1207.56 / 858.9; }
+}
+
+/* 3. 作品ページへの切り替え：人が画面を全力で横切る */
+.wipe-man { position: absolute; top: 50%; left: 0; height: 38vmin; width: auto; translate: 0 -50%;
+  transform: translateX(-60vmin) scaleX(-1); opacity: 0;
+  filter: brightness(0) invert(1);
+  -webkit-mask-image: linear-gradient(90deg, #000 40%, transparent 95%); mask-image: linear-gradient(90deg, #000 40%, transparent 95%); }
+
+/* 4. 最後まで見た人へ：人が駆け抜けて「全進全力」 */
+.finale { position: relative; overflow: hidden; background: var(--ink); padding: clamp(56px, 10vw, 120px) 16px clamp(40px, 6vw, 72px);
+  display: grid; place-items: center; }
+.finale-word { width: min(78vw, 620px); height: auto; opacity: 0; transform: scale(1.5) rotate(-4deg); }
+.finale-runner { position: absolute; top: 14%; left: 0; height: clamp(96px, 22vw, 170px); width: auto;
+  transform: translateX(-30vw) scaleX(-1); opacity: 0;
+  -webkit-mask-image: linear-gradient(90deg, #000 40%, transparent 95%); mask-image: linear-gradient(90deg, #000 40%, transparent 95%); }
+.finale.go .finale-runner { animation: finale-run 1.8s cubic-bezier(.3, .1, .5, 1) both; }
+@keyframes finale-run {
+  0% { transform: translateX(-40vw) translateY(40%) scaleX(-1); opacity: 1; }
+  45% { transform: translateX(30vw) translateY(-10%) scaleX(-1) rotate(-6deg); }
+  100% { transform: translateX(115vw) translateY(-45%) scaleX(-1) rotate(-12deg); opacity: 1; }
+}
+.finale.go .finale-word { opacity: 1; transform: none;
+  transition: opacity .2s .75s, transform .7s .75s cubic-bezier(.34, 1.7, .5, 1); }
+
+@media (prefers-reduced-motion: reduce) {
+  .runner, .wipe-man, .finale-runner { display: none !important; }
+  .finale-word { opacity: 1; transform: none; }
+}
